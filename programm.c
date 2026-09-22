@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "rockpaperscissors.h"
 #define SIZE 1000
 
 // Function to encrypt text using base64
@@ -194,7 +195,8 @@ int helpCommand()
     printf("Available commands: \n \t"
            "encrypt - Asks for input and encrypts the input \n \t"
            "decrypt - Asks for input and decrypts the input\n \t"
-           "exit - Exits the program\n");
+           "exit - Exits the program\n \t"
+           "games - lists games available to be played\n");
 }
 
 // Function to ask the user for the encryption/decryption algorithm
@@ -270,6 +272,24 @@ int decryptAskCommand()
     }
 }
 
+// Function to ask the user which game he'd like to play
+int gameAskCommand()
+{
+    printf(
+        "Select a game from the list: \n"
+        "\t1. Rock Paper Scissors \n"
+        "\t2. TicTacToe \n");
+
+    int subCommand; // Variable to store the user's choice of game
+    scanf("%d", &subCommand); // Read the user's choice from input
+    switch (subCommand){
+        case 1: // User picks "Rock Paper Scissors"
+            RPSgame();
+        case 2: // User picks "TicTacToe"
+            printf("tictactoe");
+    }
+}
+
 int main()
 {
     char command[100]; // Declare variable for user input and commands
@@ -303,6 +323,11 @@ int main()
         {
             printf("cya later alligator.\n");
             break; // Exit the loop and terminate the program
+        }
+
+        else if (strcmp(command, "games") == 0)
+        {
+            gameAskCommand();
         }
 
         else
