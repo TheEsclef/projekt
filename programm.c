@@ -9,7 +9,10 @@ char *caesarEncrypt(char text[]);
 char *caesarDecrypt(char text[]);
 char *base64Encoder(char input_str[], int len_str);
 char *base64Decoder(char input_str[], int len_str);
-int askSubCommand();
+int askEncryptSubCommand();
+int helpCommand();
+int encryptAskCommand();
+int decryptAskCommand();
 
 int main()
 {
@@ -28,75 +31,28 @@ int main()
         // if the user inputs "Help"
         if (strcmp(command, "help") == 0)
         {
-            printf("Available commands: \n \t"
-                   "encrypt - Asks for input and encrypts the input \n \t"
-                   "decrypt - Asks for input and decrypts the input\n \t"
-                   "exit - Exits the program\n");
+            helpCommand();
         }
 
         // User inputs "encrypt"
         else if (strcmp(command, "encrypt") == 0)
         {
-            subCommand = askEncryptSubCommand(); // Ask the user for the encryption algorithm
-            switch (subCommand)
-            {
-            case 1:
-                printf("Please enter the text to encrypt: \n");
-                scanf("%s", unecrypted);
-
-                char *x = caesarEncrypt(unecrypted);
-                printf("Encrypted: %s\n", x);
-                printf("Waiting for input....\n");
-                break;
-
-            case 2:
-                printf("Please enter the text to encrypt: \n");
-                scanf("%s", unecrypted); // ask the user for input
-                int lenOfUnencrypted = sizeof(unecrypted) / sizeof(unecrypted[0]); // get the length of the text
-                printf("Encrypted: %s\n", base64Encoder(unecrypted, lenOfUnencrypted));
-                break;
-
-            default: // Handle unknown subcommands
-                printf("Unknown subcommand.\n");
-                break;
-            }
+            encryptAskCommand(); // Run the encrypt function
         }
 
         // User inputs "decrypt"
         else if (strcmp(command, "decrypt") == 0)
         {
-            subCommand = askEncryptSubCommand(); // Ask the user for the decryption algorithm
-            switch (subCommand)
-            {
-            case 1:
-                printf("Please enter the text to decrypt: \n");
-                scanf("%s", encrypted); // ask the user for input
-
-                char *x = caesarDecrypt(encrypted); // Decrypt the text using the Caesar cipher
-                printf("Decrypted: %s\n", x);
-                printf("Waiting for input....\n");
-                break;
-
-            case 2:
-                printf("Please enter the text to encrypt: \n");
-                scanf("%s", encrypted);
-                int lenOfEncrypted = sizeof(encrypted) / sizeof(encrypted[0]); // Gets the length of the encrypted text
-                printf("Decrypted: %s\n", base64Decoder(encrypted, lenOfEncrypted));
-                break;
-
-            default: // Handle unknown subcommands
-                printf("Unknown subcommand.\n");
-
-                break;
-            }
+            decryptAskCommand(); // Run the decrypt function
         }
 
         // User inputs "exit"
         else if (strcmp(command, "exit") == 0)
         {
-            printf("Exiting the program.\n");
+            printf("cya later alligator.\n");
             break; // Exit the loop and terminate the program
         }
+
         else
         {
             printf("Unknown command. Type \"help\" for a list of commands.\n");
@@ -104,6 +60,74 @@ int main()
     }
 
     return 0;
+}
+
+int helpCommand()
+{
+    printf("Available commands: \n \t"
+           "encrypt - Asks for input and encrypts the input \n \t"
+           "decrypt - Asks for input and decrypts the input\n \t"
+           "exit - Exits the program\n");
+}
+
+// Handle the logic of encryption command
+int encryptAskCommand()
+{
+    int subCommand;
+    char unecrypted[100];
+    subCommand = askEncryptSubCommand(); // Ask the user for the encryption algorithm
+    switch (subCommand)
+    {
+    case 1:
+        printf("Please enter the text to encrypt: \n");
+        scanf("%s", unecrypted);
+
+        char *x = caesarEncrypt(unecrypted);
+        printf("Encrypted: %s\n", x);
+        printf("Waiting for input....\n");
+        break;
+
+    case 2:
+        printf("Please enter the text to encrypt: \n");
+        scanf("%s", unecrypted);                                           // ask the user for input
+        int lenOfUnencrypted = sizeof(unecrypted) / sizeof(unecrypted[0]); // get the length of the text
+        printf("Encrypted: %s\n", base64Encoder(unecrypted, lenOfUnencrypted));
+        break;
+
+    default: // Handle unknown subcommands
+        printf("Unknown subcommand.\n");
+        break;
+    }
+}
+
+int decryptAskCommand()
+{
+    char encrypted[100];
+    int subCommand;
+    subCommand = askEncryptSubCommand(); // Ask the user for the decryption algorithm
+    switch (subCommand)
+    {
+    case 1:
+        printf("Please enter the text to decrypt: \n");
+        scanf("%s", encrypted); // ask the user for input
+
+        char *x = caesarDecrypt(encrypted); // Decrypt the text using the Caesar cipher
+        printf("Decrypted: %s\n", x);
+        printf("Waiting for input....\n");
+        break;
+
+    case 2:
+        printf("Please enter the text to encrypt: \n");
+        scanf("%s", encrypted);
+        int lenOfEncrypted = sizeof(encrypted) / sizeof(encrypted[0]); // Gets the length of the encrypted text
+        printf("Decrypted: %s\n", base64Decoder(encrypted, lenOfEncrypted));
+        break;
+
+    default: // Handle unknown subcommands
+        printf("Unknown subcommand.\n");
+
+        break;
+    }
 }
 
 // Function to ask the user for the encryption/decryption algorithm
