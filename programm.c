@@ -272,11 +272,7 @@ int decryptAskCommand()
 
 int main()
 {
-    // Declare variables for user input and commands
-    char command[100];
-    int subCommand;
-    char unecrypted[100];
-    char encrypted[100];
+    char command[100]; // Declare variable for user input and commands
 
     printf("big dick john is waiting for your command ;) \n"); // greet the user with a nice and friendly message
 
