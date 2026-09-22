@@ -192,21 +192,24 @@ char *caesarDecrypt(char text[])
 
 int helpCommand()
 {
+    system("cls");
     printf("Available commands: \n \t"
            "encrypt - Asks for input and encrypts the input \n \t"
            "decrypt - Asks for input and decrypts the input\n \t"
-           "exit - Exits the program\n \t"
-           "games - lists games available to be played\n");
+           "games - lists games available to be played\n \t"
+           "exit - Exits the program\n");
 }
 
 // Function to ask the user for the encryption/decryption algorithm
 int askEncryptSubCommand()
 {
+    system("cls");
     int choice; // Variable to store the user's choice of encryption/decryption algorithm
     printf(
-        "Please select the decryption algorithm \n"
+        "Please select the algorithm \n"
         "\t1. Caesar \n"
-        "\t2. base64 \n");
+        "\t2. base64 \n"
+        "\t3. EXIT \n");
 
     scanf("%d", &choice); // Read the user's choice from input
     return choice;
@@ -215,6 +218,7 @@ int askEncryptSubCommand()
 // Handle the logic of encryption command
 int encryptAskCommand()
 {
+    system("cls");
     int subCommand;
     char unecrypted[100];
     subCommand = askEncryptSubCommand(); // Ask the user for the encryption algorithm
@@ -226,7 +230,6 @@ int encryptAskCommand()
 
         char *x = caesarEncrypt(unecrypted);
         printf("Encrypted: %s\n", x);
-        printf("Waiting for input....\n");
         break;
 
     case 2:
@@ -234,6 +237,10 @@ int encryptAskCommand()
         scanf("%s", unecrypted);                                           // ask the user for input
         int lenOfUnencrypted = sizeof(unecrypted) / sizeof(unecrypted[0]); // get the length of the text
         printf("Encrypted: %s\n", base64Encoder(unecrypted, lenOfUnencrypted));
+        break;
+
+    case 3:
+        printf("USER EXITS \n");
         break;
 
     default: // Handle unknown subcommands
@@ -244,6 +251,7 @@ int encryptAskCommand()
 
 int decryptAskCommand()
 {
+    system("cls");
     char encrypted[100];
     int subCommand;
     subCommand = askEncryptSubCommand(); // Ask the user for the decryption algorithm
@@ -255,7 +263,6 @@ int decryptAskCommand()
 
         char *x = caesarDecrypt(encrypted); // Decrypt the text using the Caesar cipher
         printf("Decrypted: %s\n", x);
-        printf("Waiting for input....\n");
         break;
 
     case 2:
@@ -263,6 +270,10 @@ int decryptAskCommand()
         scanf("%s", encrypted);
         int lenOfEncrypted = sizeof(encrypted) / sizeof(encrypted[0]); // Gets the length of the encrypted text
         printf("Decrypted: %s\n", base64Decoder(encrypted, lenOfEncrypted));
+        break;
+
+    case 3:
+        printf("USER EXITS \n");
         break;
 
     default: // Handle unknown subcommands
@@ -275,18 +286,25 @@ int decryptAskCommand()
 // Function to ask the user which game he'd like to play
 int gameAskCommand()
 {
+    system("cls");
     printf(
         "Select a game from the list: \n"
         "\t1. Rock Paper Scissors \n"
         "\t2. TicTacToe \n");
 
-    int subCommand; // Variable to store the user's choice of game
+    int subCommand;           // Variable to store the user's choice of game
     scanf("%d", &subCommand); // Read the user's choice from input
-    switch (subCommand){
-        case 1: // User picks "Rock Paper Scissors"
-            RPSgame();
-        case 2: // User picks "TicTacToe"
-            printf("tictactoe");
+    switch (subCommand)
+    {
+    case 1: // User picks "Rock Paper Scissors"
+        RPSgame();
+        break;
+    case 2: // User picks "TicTacToe"
+        printf("tictactoe");
+        break;
+    default:
+        printf("INVALID");
+        break;
     }
 }
 

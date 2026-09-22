@@ -141,6 +141,7 @@ int RPSgame()
 
         if (strcmp(command, "exit") == 0)
         {
+            printf("BIGGUS DICKUS JOHNNUS IS WAITING FOR YOUR COMMAND\n");
             break;
         }
     }
