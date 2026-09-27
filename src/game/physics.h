@@ -33,17 +33,3 @@ void handleCollision(Rectangle x, Rectangle y)
         }
     }
 }
-
-// Handles Horizontal velocity of the player
-float handleVelocity(float velocity, float maxVelocity)
-{
-    if (velocity > maxVelocity)
-    {
-        velocity = maxVelocity; // Clamps the velocity to max velocity
-    }
-    else
-    {
-        velocity *= 1.04; // increases velocity to simulate gaining speed
-    }
-    return velocity;
-}
