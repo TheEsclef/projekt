@@ -1,118 +1,89 @@
 #include <raylib.h>
 #include <stdio.h>
-#include "physics.h"
+#include "player.h"
+#include "player.c"
 
 #define SCREEN_WIDTH 750
 #define SCREEN_HEIGHT 750
-#define WALK_SPEED 4.0f
-#define RUN_SPEED 6.0f
 
-// DRAWN OBJECTS
-Rectangle player = {400, 600, 20, 40};   // Creates the player object
-Rectangle ground = {0, 640, 800, 200};   // Creates the ground object
-Rectangle leftWall = {0, 0, 50, 800};    // Creates the wall to the left
-Rectangle rightWall = {700, 0, 50, 800}; // Creates the wall to the right
+// Creating game objects
+Rectangle ground = {0, 640, 750, 200};
+Rectangle leftWall = {0, 0, 50, 800};
+Rectangle rightWall = {700, 0, 50, 800};
 
-// CUSTOM COLORS
-Color green = {20, 160, 133, 255}; // defines the color green
+// Custom colors for ingame use
+Color green = {20, 160, 133, 255};
 
-// HANDLES PLAYER MOVEMENT
-float velocity = 1.0f;
-float jumpVelocity = 16.0f;
-bool isJumping;
-int jumpTimer;
+// Random values
+char scoreText[20];
+int timer;
+int score;
 
-// 1. Initialize the scene
-void init()
+// Function for initialization
+void init(void)
 {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Aken"); // Creates the window
-    SetTargetFPS(60);                                // Sets the FPS to 60
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Aken"); // creates a window
+    SetTargetFPS(60);                                // Sets the max FPS to 60
 }
 
-// 2. Handle Updates
-void update()
+// Function for updating logic
+void update(void)
 {
-    // Handle the player's max velocity to simulate running
-    float currentMaxVelocity =
-        IsKeyDown(KEY_LEFT_SHIFT)
-            ? RUN_SPEED   // If player is holding shift down
-            : WALK_SPEED; // If player isnt holding shift down
-
-    if (IsKeyDown(KEY_D)) // if player moves Left
-    {
-        player.x += velocity;
-        velocity = handleVelocity(velocity, currentMaxVelocity); // Increases velocity as player moves
-    }
-    else if (IsKeyDown(KEY_A)) // if player moves Right
-    {
-        player.x -= velocity;
-        velocity = handleVelocity(velocity, currentMaxVelocity); // Increases velocity as player moves
-    }
-    else
-    {
-        velocity = 1; // after moving stops, sets the velocity back to default
-    }
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        isJumping = true; // when space is pressed, toggled jumping
+    updatePlayer(); // Handles player movement
+    
+    // Simple counter to add score once every second
+    timer++;
+    if(timer >= 60){
+        score++;
+        timer = 0;
     }
 
-    if (isJumping) // handles Jumping
-    {
-        jumpTimer += 1; // tick up a timer
-
-        if (jumpTimer < 40) // for 40 frames player moves up
-        {
-            player.y -= jumpVelocity;
-            jumpVelocity *= 0.92; // gradually decrease the speed at which player rises
-        }
-        else // for 40 frames player moves down
-        {
-            player.y += jumpVelocity;
-            jumpVelocity *= 1.08; // gradually increase the speed at which player falls
-        }
-        if (jumpTimer >= 81) // After jump cycle has ended
-        {
-            jumpTimer = 0;        // reset the jumptimer
-            jumpVelocity = 16.0f; // reset the velocity
-            player.y = 600;       // Reset the player position after jump (makes it seem as if everything works wonderfully)
-            isJumping = false;
-        }
-    }
+    // Check for collisions with the left wall
     if (player.x < leftWall.x + leftWall.width)
     {
-        player.x = leftWall.x + leftWall.width;
+        player.x = leftWall.x + leftWall.width; // if player is colliding, pushes them back to simulate wall
     }
+    // Check for collisions with the right wall
     if (player.x + player.width > rightWall.x)
     {
-        player.x = rightWall.x - player.width;
+        player.x = rightWall.x - player.width; // if player is colliding, pushes them back to simulate wall
     }
 }
 
-// 3. Handle drawing
-void draw()
+// Function for drawing (in C you need to tell the program "alright now we're putting stuff on screen get ready")
+void draw(void)
 {
-    BeginDrawing();
+    BeginDrawing(); // starts the drawing process (utilizes the GPU)
 
-    ClearBackground(green);
+    ClearBackground(green); // Clears away the previous frame, otherwise you'd get texture fighting
 
-    DrawRectangleRec(player, WHITE);
-    DrawRectangleRec(ground, GRAY);
-    DrawRectangleRec(rightWall, BLACK);
-    DrawRectangleRec(leftWall, BLACK);
-    EndDrawing();
+    DrawRectangleRec(player, WHITE);    // draws the player
+    DrawRectangleRec(ground, GRAY);     // draws the ground
+    DrawRectangleRec(leftWall, BLACK);  // draws the left wall
+    DrawRectangleRec(rightWall, BLACK); // draws the rightwall
+    DrawRectangle(0, 0, 750, 150, LIGHTGRAY);
+
+    sprintf(scoreText, "Score: %d", score);
+    DrawText(scoreText, 160, 15, 100, DARKBROWN);
+    DrawText("A/D - Left/Right", 100, 650, 15, WHITE);
+    DrawText("Space - Jump", 320, 650, 15, WHITE);
+    DrawText("Esc - Exits the game", 500, 650, 15, WHITE);
+    DrawText("Don't get hit, survive as long as you can", 60, 700, 30, WHITE);
+
+    EndDrawing(); // we tell the program "alright your bob ross era has ended"
 }
 
-int main()
+// main function where we actually call everything
+int main(void)
 {
-    init();
+    init(); // initialize the scene
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose()) // if the window shouldnt close, then....
     {
-        update();
-        draw();
+        update(); // update game logic and values
+        draw();   // draw things onto the screen
     }
 
-    CloseWindow();
-    return 0;
+    CloseWindow(); // we should close the windows right about now
+    return 0;      // this nigga aint doin shit
 }
